@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 
 const app = express();
 const server = http.createServer(app);
@@ -14,10 +14,16 @@ app.get('/', (req, res) => {
   res.send('<p>Hello world</p>');
 });
 
+let connectionTotal = 0;
+
 io.on('connection', (socket) => {
+  connectionTotal++;
   console.log('a user connected');
 
+  socket.emit('totalConnections', connectionTotal);
+
   socket.on('disconnect', () => {
+    connectionTotal--;
     console.log('a user disconnected');
   });
 });

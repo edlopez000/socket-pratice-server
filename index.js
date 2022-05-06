@@ -20,10 +20,11 @@ io.on('connection', (socket) => {
   connectionTotal++;
   console.log('a user connected');
 
-  socket.emit('totalConnections', connectionTotal);
+  io.emit('totalConnections', connectionTotal); // io instead of socket because you want the connectionTotal to go to all available connections
 
   socket.on('disconnect', () => {
     connectionTotal--;
+    io.emit('totalConnections', connectionTotal); // Emit was needed since it was only emitted on connection and not after value was updated
     console.log('a user disconnected');
   });
 });
